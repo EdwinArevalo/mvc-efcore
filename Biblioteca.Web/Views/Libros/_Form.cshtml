@@ -1,0 +1,32 @@
+@model Libro
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="mb-3">
+    <label asp-for="IdAutor" class="form-label">Autor</label>
+    <select asp-for="IdAutor" asp-items="ViewBag.Autores" class="form-select">
+        <option value="0">-- Seleccione un autor --</option>
+    </select>
+    <span asp-validation-for="IdAutor" class="text-danger"></span>
+</div>
+<div class="mb-3">
+    <label asp-for="Titulo" class="form-label">Título</label>
+    <input asp-for="Titulo" class="form-control" maxlength="150" />
+    <span asp-validation-for="Titulo" class="text-danger"></span>
+</div>
+<div class="mb-3">
+    <label asp-for="Isbn" class="form-label">ISBN</label>
+    <input asp-for="Isbn" class="form-control" maxlength="13" />
+    <span asp-validation-for="Isbn" class="text-danger"></span>
+</div>
+<div class="row">
+    <div class="col-6 mb-3">
+        <label asp-for="Precio" class="form-label">Precio (S/)</label>
+        <input asp-for="Precio" class="form-control" step="0.01" />
+        <span asp-validation-for="Precio" class="text-danger"></span>
+    </div>
+    <div class="col-6 mb-3">
+        <label asp-for="AnioPublicacion" class="form-label">Año de publicación</label>
+        <input asp-for="AnioPublicacion" class="form-control" />
+        <span asp-validation-for="AnioPublicacion" class="text-danger"></span>
+    </div>
+</div>

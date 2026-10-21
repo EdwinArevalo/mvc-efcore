@@ -1,0 +1,13 @@
+@model Autor
+@{
+    ViewData["Title"] = "Editar autor";
+}
+
+<h1>Editar autor</h1>
+
+<form asp-action="Edit" asp-route-id="@Model.IdAutor" class="col-md-6">
+    <input type="hidden" asp-for="IdAutor" />
+    <partial name="_Form" model="Model" />
+    <button class="btn btn-primary">Guardar cambios</button>
+    <a class="btn btn-outline-secondary" asp-action="Index">Cancelar</a>
+</form>

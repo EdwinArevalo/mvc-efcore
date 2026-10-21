@@ -1,0 +1,50 @@
+@model IEnumerable<Libro>
+@{
+    ViewData["Title"] = "Inicio";
+}
+
+<h1 class="mb-4">Biblioteca</h1>
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="card text-center h-100"><div class="card-body">
+            <div class="fs-2 fw-semibold">@ViewBag.TotalAutores</div>
+            <div class="text-muted">Autores</div>
+        </div></div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card text-center h-100"><div class="card-body">
+            <div class="fs-2 fw-semibold">@ViewBag.TotalLibros</div>
+            <div class="text-muted">Libros</div>
+        </div></div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card text-center h-100"><div class="card-body">
+            <div class="fs-2 fw-semibold">@(((decimal)ViewBag.PrecioPromedio).ToString("C"))</div>
+            <div class="text-muted">Precio promedio</div>
+        </div></div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card text-center h-100"><div class="card-body">
+            <div class="fs-2 fw-semibold">@(((decimal)ViewBag.ValorCatalogo).ToString("C"))</div>
+            <div class="text-muted">Valor del catálogo</div>
+        </div></div>
+    </div>
+</div>
+
+<h2 class="h4">Los 5 libros más caros</h2>
+<table class="table table-striped">
+    <thead>
+        <tr><th>Título</th><th>Autor</th><th class="text-end">Precio</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var libro in Model)
+        {
+            <tr>
+                <td><a asp-controller="Libros" asp-action="Details" asp-route-id="@libro.IdLibro">@libro.Titulo</a></td>
+                <td>@libro.IdAutorNavigation.Nombre</td>
+                <td class="text-end">@libro.Precio.ToString("C")</td>
+            </tr>
+        }
+    </tbody>
+</table>

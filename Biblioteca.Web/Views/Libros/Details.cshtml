@@ -1,0 +1,20 @@
+@model Libro
+@{
+    ViewData["Title"] = Model.Titulo;
+}
+
+<h1>@Model.Titulo</h1>
+
+<dl class="row">
+    <dt class="col-sm-3">Autor</dt>
+    <dd class="col-sm-9"><a asp-controller="Autores" asp-action="Details" asp-route-id="@Model.IdAutor">@Model.IdAutorNavigation.Nombre</a></dd>
+    <dt class="col-sm-3">ISBN</dt>
+    <dd class="col-sm-9">@Model.Isbn</dd>
+    <dt class="col-sm-3">Año de publicación</dt>
+    <dd class="col-sm-9">@Model.AnioPublicacion</dd>
+    <dt class="col-sm-3">Precio</dt>
+    <dd class="col-sm-9">@Model.Precio.ToString("C")</dd>
+</dl>
+
+<a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.IdLibro">Editar</a>
+<a class="btn btn-outline-secondary" asp-action="Index">Volver</a>

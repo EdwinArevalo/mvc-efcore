@@ -1,0 +1,13 @@
+@model Libro
+@{
+    ViewData["Title"] = "Eliminar libro";
+}
+
+<h1>Eliminar libro</h1>
+
+<p>¿Desea eliminar el libro <strong>@Model.Titulo</strong> de <strong>@Model.IdAutorNavigation.Nombre</strong>?</p>
+
+<form asp-action="Delete" asp-route-id="@Model.IdLibro">
+    <button class="btn btn-danger">Eliminar</button>
+    <a class="btn btn-outline-secondary" asp-action="Index">Cancelar</a>
+</form>

@@ -1,0 +1,20 @@
+@model Autor
+@{
+    ViewData["Title"] = "Eliminar autor";
+    int cantidad = ViewBag.CantidadLibros ?? 0;
+}
+
+<h1>Eliminar autor</h1>
+
+<div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+<p>¿Desea eliminar al autor <strong>@Model.Nombre</strong>?</p>
+@if (cantidad > 0)
+{
+    <p class="text-warning">Tiene @cantidad libro(s) activo(s); no podrá eliminarse hasta quitarlos.</p>
+}
+
+<form asp-action="Delete" asp-route-id="@Model.IdAutor">
+    <button class="btn btn-danger">Eliminar</button>
+    <a class="btn btn-outline-secondary" asp-action="Index">Cancelar</a>
+</form>
