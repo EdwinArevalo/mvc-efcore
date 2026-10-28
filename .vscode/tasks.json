@@ -18,21 +18,9 @@
       "isBackground": true
     },
     {
-      "label": "BD: levantar y cargar BibliotecaDB",
+      "label": "BD: levantar SQL Server",
       "type": "shell",
-      "command": "./scripts/cargar-bd.sh",
-      "problemMatcher": []
-    },
-    {
-      "label": "BD: ejecutar ModificarLibro.sql",
-      "type": "shell",
-      "command": "./scripts/cargar-bd.sh ModificarLibro.sql",
-      "problemMatcher": []
-    },
-    {
-      "label": "Scaffold: regenerar Models",
-      "type": "shell",
-      "command": "./scripts/scaffold.sh",
+      "command": "./scripts/levantar-bd.sh",
       "problemMatcher": []
     }
   ]

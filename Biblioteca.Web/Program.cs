@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-// Contexto generado con scaffold: la cadena de conexión viene de appsettings.json
+// Contexto Code First (modelos con DataAnnotations + migraciones): la cadena de conexión viene de appsettings.json
 builder.Services.AddDbContext<BibliotecaContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Biblioteca")));
 

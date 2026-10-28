@@ -1,10 +1,9 @@
-# Biblioteca — ASP.NET Core MVC + EF Core (Database First)
+# Biblioteca — ASP.NET Core MVC + EF Core (Code First)
 
 Demo de la **Semana 10** (Desarrollo de Aplicaciones Empresariales Avanzadas). Misma estructura que la guía
 de laboratorio (Hotel.Web), con el dominio **Autor / Libro** del PPT:
 
-- Base de datos primero: el esquema lo define `db/BibliotecaDB.sql` (sin migraciones, sin procedimientos almacenados).
-- Modelo generado con **scaffold** en `Models/` (no se edita a mano).
+- Code First: el esquema lo definen los modelos de `Models/` (con **DataAnnotations**) y se crea con **migraciones** de EF Core.
 - Acceso a datos solo en `Repositorios/` (LINQ + `SaveChangesAsync`); los controladores **no** usan el `DbContext`.
 - Eliminación lógica (`Activo = 0`), patrón Post/Redirect/Get y mensajes con `TempData`.
 
@@ -18,13 +17,14 @@ de laboratorio (Hotel.Web), con el dominio **Autor / Libro** del PPT:
 ## Ejecutar
 
 ```bash
-./scripts/cargar-bd.sh          # levanta SQL Server en Docker y crea BibliotecaDB con datos
+./scripts/levantar-bd.sh        # levanta SQL Server en Docker (la BD aún no existe)
 cd Biblioteca.Web
+dotnet tool restore             # instala dotnet-ef desde el manifiesto local
+dotnet ef database update       # aplica las migraciones y crea BibliotecaDB
 dotnet run                      # http://localhost:5297
 ```
 
 En VS Code: abrir la carpeta `Mvc.Net` y pulsar **F5** (usa `.vscode/launch.json`).
-Para volver a dejar la BD como al inicio, ejecutar de nuevo `./scripts/cargar-bd.sh`.
 
 Cadena de conexión (también en `Biblioteca.Web/appsettings.json`):
 
@@ -32,53 +32,32 @@ Cadena de conexión (también en `Biblioteca.Web/appsettings.json`):
 Server=localhost,1433;Database=BibliotecaDB;User Id=sa;Password=Biblioteca_2026;TrustServerCertificate=True
 ```
 
-## Scaffold (Database First)
+## Migraciones (Code First)
 
-Desde la carpeta del proyecto (`Biblioteca.Web`). La herramienta `dotnet-ef` ya está en el manifiesto local
-(`dotnet tool restore`); si se prefiere global: `dotnet tool install --global dotnet-ef`.
+Desde la carpeta del proyecto (`Biblioteca.Web`):
 
 ```bash
-dotnet ef dbcontext scaffold \
-  "Server=localhost,1433;Database=BibliotecaDB;User Id=sa;Password=Biblioteca_2026;TrustServerCertificate=True" \
-  Microsoft.EntityFrameworkCore.SqlServer \
-  --output-dir Models --context BibliotecaContext --no-onconfiguring --force
+dotnet ef migrations add NombreDeLaMigracion   # genera Migrations/ a partir de los modelos
+dotnet ef database update                      # aplica las migraciones pendientes
 ```
 
-- `--no-onconfiguring` evita que se genere `OnConfiguring` (en la guía se borra a mano).
-- `--force` sobrescribe `Models/` al regenerar. Los archivos propios están fuera de `Models/`
-  (`Repositorios/`, controladores, vistas), por eso no se pierden.
-- Atajo: `./scripts/scaffold.sh`. En Visual Studio sería
-  `Scaffold-DbContext "<cadena>" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -Context BibliotecaContext -NoOnConfiguring -Force`.
+Para cambiar el esquema se edita el modelo (por ejemplo, agregar `Sinopsis` a `Libro`), se crea otra migración y se
+aplica. Un campo nuevo también hay que agregarlo a mano en el `[Bind]` del controlador, en `ActualizarAsync` del
+repositorio y en el formulario `_Form.cshtml`.
 
 ## Estructura
 
 ```
 Mvc.Net/
 ├── docker-compose.yml          SQL Server 2022
-├── db/
-│   ├── BibliotecaDB.sql        esquema + datos (Autor, Libro)
-│   └── ModificarLibro.sql      ALTER TABLE para la demo "si la BD cambia"
-├── scripts/                    cargar-bd.sh · scaffold.sh
+├── scripts/                    levantar-bd.sh
 └── Biblioteca.Web/
-    ├── Models/                 generado con scaffold (Autor, Libro, BibliotecaContext)
+    ├── Models/                 Autor · Libro (DataAnnotations) · BibliotecaContext
+    ├── Migrations/             generado por dotnet ef migrations add
     ├── Repositorios/           AutorRepositorio · LibroRepositorio (todo el LINQ)
     ├── Controllers/            Home · Autores · Libros
     └── Views/
 ```
-
-El comando de scaffold listo para copiar en la presentación está en `scripts/comandos.txt`.
-
-## Guion sugerido para la clase
-
-1. Mostrar `db/BibliotecaDB.sql` y ejecutarlo (`./scripts/cargar-bd.sh`).
-2. Crear el proyecto y paquetes: `dotnet new mvc -n Biblioteca.Web`,
-   `dotnet add package Microsoft.EntityFrameworkCore.SqlServer` y `...Design`.
-3. Ejecutar el scaffold y revisar `Models/`: `Autors`, `Libros`, `IdAutorNavigation`.
-4. Registrar `AddDbContext` y los repositorios (`AddScoped`) en `Program.cs`.
-5. Recorrer `LibroRepositorio` (Where, Include, OrderBy, Select, Any, Count/Sum/Average/Max, Take, `AsNoTracking`).
-6. Probar CRUD: ISBN duplicado (`AddModelError`), eliminar autor con libros, eliminación lógica.
-7. Cambio de esquema: `./scripts/cargar-bd.sh ModificarLibro.sql` y regenerar con `--force`;
-   aparece `Libro.Sinopsis` en `Models/`. (Para volver: `./scripts/cargar-bd.sh`.)
 
 ## Notas
 
