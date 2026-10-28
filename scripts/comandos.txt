@@ -1,0 +1,24 @@
+dotnet ef database drop --force
+
+dotnet ef migrations add InicialCreate
+ 
+dotnet ef database update
+ 
+OTROS COMANDOS UTILES
+---------------------------------------------------------------------
+
+dotnet ef migrations add NombreDeLaMigracion
+
+dotnet ef database update
+
+# Listar migraciones (y ver cuales estan aplicadas)
+dotnet ef migrations list
+
+# Ver el SQL que generaria una migracion, sin aplicarla
+dotnet ef migrations script
+
+# Deshacer la ultima migracion (solo si NO esta aplicada a la BD)
+dotnet ef migrations remove
+ 
+---------------------------------------------------------------------  
+  dotnet tool install --global dotnet-ef
